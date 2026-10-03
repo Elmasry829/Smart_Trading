@@ -1,221 +1,734 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Trading Pro</title>
-<style>
-:root{
-  --bg:#071522;--bg2:#0b1d2d;--card:#10283a;--card2:#142f43;
-  --line:#2b4960;--gold:#e9c45f;--gold2:#f5d77e;--text:#f2f5f7;
-  --muted:#9db0bf;--green:#43d49a;--red:#f0716d;--blue:#42a5f5;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at 80% 10%,#17344a 0,transparent 30%),var(--bg);color:var(--text);min-height:100vh}
-button,input,select{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
-.container{width:min(1180px,calc(100% - 28px));margin:auto}
-header{position:sticky;top:0;z-index:50;background:rgba(7,21,34,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.top{height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-.logo{font-size:23px;font-weight:900;color:var(--text);letter-spacing:.5px}
-.logo span{color:var(--gold)}
-.menu{display:none;background:none;border:1px solid var(--line);color:var(--gold);padding:9px 13px;border-radius:9px;font-size:22px}
-nav{display:flex;gap:7px;align-items:center}
-nav a,.btn{border:1px solid var(--line);background:transparent;color:var(--text);padding:10px 14px;border-radius:8px;font-size:13px}
-nav a:hover,.btn:hover{border-color:var(--gold);color:var(--gold)}
-.btn.primary{background:var(--gold);color:#17202a;border-color:var(--gold);font-weight:800}
-.hero{padding:42px 0 22px;text-align:center}
-.hero .eyebrow{color:var(--gold);font-weight:800}
-.hero h1{font-size:clamp(31px,5vw,57px);margin:13px 0;line-height:1.25}
-.hero h1 span{color:var(--gold)}
-.hero p{max-width:720px;margin:auto;color:var(--muted);line-height:1.9}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
-.ticker{margin:15px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.quote{background:linear-gradient(145deg,var(--card),#0d2030);border:1px solid var(--line);border-radius:11px;padding:15px}
-.quote small{color:var(--muted)}
-.quote strong{display:block;font-size:21px;margin:8px 0 4px;color:var(--gold)}
-.up{color:var(--green)}.down{color:var(--red)}
-.section{padding:25px 0}
-.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:20px 0 13px}
-.section-head h2{font-size:25px}.section-head p{font-size:13px;color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:15px}
-.card{background:linear-gradient(145deg,var(--card),#0c2030);border:1px solid var(--line);border-radius:13px;padding:18px}
-.card h3{margin-bottom:12px}.muted{color:var(--muted)}
-.widget{width:100%;min-height:400px}
-.chartbox{height:470px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
-.tabs button{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 12px;border-radius:7px}
-.tabs button.active,.tabs button:hover{background:var(--gold);color:#18202a;border-color:var(--gold)}
-.levels{display:grid;gap:9px}
-.level{display:flex;justify-content:space-between;align-items:center;padding:13px;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:8px}
-.level strong{color:var(--gold)}
-.signal{display:inline-block;padding:7px 12px;border-radius:20px;background:rgba(67,212,154,.12);border:1px solid rgba(67,212,154,.35);color:var(--green);font-size:12px}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.tool{padding:20px;min-height:145px;cursor:pointer;transition:.2s}
-.tool:hover{transform:translateY(-3px);border-color:var(--gold)}
-.tool .ico{font-size:27px;color:var(--gold);margin-bottom:11px}
-.tool b{display:block;margin-bottom:7px}.tool p{font-size:13px;color:var(--muted);line-height:1.7}
-.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
-.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-.field input,.field select{width:100%;background:#081a29;border:1px solid var(--line);color:#fff;padding:12px;border-radius:8px;outline:none}
-.result{margin-top:14px;padding:15px;border-radius:9px;background:rgba(233,196,95,.09);border:1px solid rgba(233,196,95,.35);color:var(--gold);line-height:2}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;padding:25px;overflow:auto}
-.modal.open{display:flex;align-items:center;justify-content:center}
-.modalbox{width:min(720px,100%);background:#0d2131;border:1px solid var(--line);border-radius:15px;padding:22px}
-.close{float:left;background:none;border:0;color:var(--muted);font-size:25px}
-footer{border-top:1px solid var(--line);margin-top:35px;padding:25px 0;text-align:center;color:var(--muted);font-size:13px}
-@media(max-width:900px){
- .tools{grid-template-columns:repeat(2,1fr)}.ticker{grid-template-columns:repeat(2,1fr)}
- .grid2{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,1fr)}
- nav{display:none;position:absolute;top:76px;right:14px;left:14px;background:var(--card);padding:12px;border:1px solid var(--line);border-radius:11px;flex-direction:column;align-items:stretch}
- nav.open{display:flex}.menu{display:block}
-}
-@media(max-width:520px){
- .tools,.ticker,.formgrid{grid-template-columns:1fr}.hero{padding-top:30px}.card{padding:14px}.chartbox{height:410px}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Trading</title>
+
+  <style>
+    :root {
+      --bg: #071521;
+      --card: #102536;
+      --card-2: #142d40;
+      --border: #24445b;
+      --gold: #e8bd58;
+      --text: #f4f7fa;
+      --muted: #91a7b7;
+      --green: #36c995;
+      --red: #ee6c68;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 10% 20%, #123248 0, transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family: Tahoma, Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 28px));
+      margin: auto;
+    }
+
+    header {
+      height: 72px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(7, 21, 33, .94);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      color: var(--gold);
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      white-space: nowrap;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    nav a,
+    .outline-btn {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 7px;
+      font-size: 13px;
+      background: transparent;
+    }
+
+    nav a:hover,
+    .outline-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .primary-btn {
+      background: var(--gold);
+      color: #1a1a16;
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    .menu {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 7px;
+    }
+
+    .hero {
+      padding: 72px 0 35px;
+      text-align: center;
+    }
+
+    .hero small {
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 65px);
+      line-height: 1.2;
+      margin: 18px auto;
+      max-width: 850px;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: auto;
+      line-height: 2;
+      font-size: 16px;
+    }
+
+    .actions {
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .market-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .market-card,
+    .panel,
+    .tool-card {
+      background: linear-gradient(145deg, var(--card), #0d2030);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .market-card {
+      padding: 18px;
+    }
+
+    .market-card small,
+    .muted {
+      color: var(--muted);
+    }
+
+    .market-card strong {
+      display: block;
+      margin: 12px 0 4px;
+      font-size: 21px;
+    }
+
+    .up {
+      color: var(--green);
+    }
+
+    .down {
+      color: var(--red);
+    }
+
+    .section-title {
+      margin: 42px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .section-title h2 {
+      font-size: 24px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .analysis-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .asset {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .asset-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(232, 189, 88, .14);
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .timeframes {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .timeframes button {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      padding: 7px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .timeframes button.active,
+    .timeframes button:hover {
+      background: var(--gold);
+      color: #1a1a16;
+    }
+
+    canvas {
+      width: 100%;
+      height: 285px;
+      background:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 42px 42px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .signal {
+      display: inline-block;
+      background: rgba(54, 201, 149, .14);
+      color: var(--green);
+      border: 1px solid rgba(54, 201, 149, .4);
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .levels {
+      display: grid;
+      gap: 11px;
+    }
+
+    .level {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .level span:first-child {
+      color: var(--muted);
+    }
+
+    .level strong {
+      color: var(--gold);
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .tool-card {
+      padding: 20px;
+      transition: .2s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .tool-card b {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .tool-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .calculator {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      background: #081a29;
+      border: 1px solid var(--border);
+      color: white;
+      padding: 12px;
+      border-radius: 7px;
+      outline: none;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(232, 189, 88, .1);
+      border: 1px solid rgba(232, 189, 88, .35);
+      color: var(--gold);
+      line-height: 2;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 25px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 850px) {
+      nav {
+        display: none;
+        position: absolute;
+        top: 72px;
+        right: 14px;
+        left: 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 12px;
+        border-radius: 10px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      nav.open {
+        display: flex;
+      }
+
+      .menu {
+        display: block;
+      }
+
+      .market-strip,
+      .tools {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .analysis-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .calculator {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .market-strip,
+      .tools,
+      .calculator {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        height: 62px;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      .panel {
+        padding: 14px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:16px">
+      <button class="menu" id="menuBtn">☰</button>
 
-<header>
- <div class="container top">
-  <button class="menu" id="menu">☰</button>
-  <nav id="nav">
-   <a href="#home">الرئيسية</a><a href="#chart">شارت وتحليل</a><a href="#tools">الأدوات</a>
-   <a href="#radar">سكالب رادار</a><a href="#calendar">التقويم الاقتصادي</a>
-   <button class="btn">حساب الوكالة</button>
-  </nav>
-  <div class="logo">SMART <span>TRADING</span></div>
- </div>
-</header>
+      <nav id="nav">
+        <a href="#analysis">التحليل والرسم البياني</a>
+        <a href="#tools">أدوات التداول</a>
+        <a href="#calculator">حاسبة المخاطرة</a>
+        <a href="#news">الأخبار</a>
+        <button class="outline-btn">تسجيل الدخول</button>
+      </nav>
 
-<main class="container" id="home">
-<section class="hero">
- <div class="eyebrow">SMART TRADING PRO</div>
- <h1>كل أدوات التداول <span>في مكان واحد</span></h1>
- <p>منصة عربية متكاملة لتحليل الذهب والأسواق، الشارت المباشر، إدارة المخاطر، الحسابات الفنية وأدوات السكالبينج.</p>
- <div class="actions">
-  <button class="btn primary" onclick="go('chart')">شارت وتحليل ↗</button>
-  <button class="btn" onclick="go('radar')">سكالب رادار ◎</button>
- </div>
-</section>
-
-<section class="ticker">
- <div class="quote"><small>XAU/USD — الذهب</small><strong id="gold">Live</strong><span class="up">بيانات السوق الحية</span></div>
- <div class="quote"><small>EUR/USD</small><strong>Live</strong><span class="muted">TradingView</span></div>
- <div class="quote"><small>Bitcoin</small><strong>Live</strong><span class="muted">TradingView</span></div>
- <div class="quote"><small>DXY</small><strong>Live</strong><span class="muted">TradingView</span></div>
-</section>
-
-<div class="tradingview-widget-container" style="width:100%;min-height:80px;margin-bottom:15px">
- <div class="tradingview-widget-container__widget"></div>
- <script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
- {"symbols":[{"proName":"OANDA:XAUUSD","title":"XAU/USD"},{"proName":"FX:EURUSD","title":"EUR/USD"},{"proName":"COINBASE:BTCUSD","title":"Bitcoin"},{"proName":"TVC:DXY","title":"DXY"}],"showSymbolLogo":false,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"ar"}
- </script>
-</div>
-
-<section class="section" id="chart">
- <div class="section-head"><div><h2>شارت الرسم والتحليل</h2><p>شارت TradingView مباشر داخل المنصة</p></div><span class="signal">● مباشر</span></div>
- <div class="grid2">
-  <div class="card">
-   <div class="tabs"><button class="active" onclick="setTF(this,'5')">5 د</button><button onclick="setTF(this,'15')">15 د</button><button onclick="setTF(this,'60')">1 س</button><button onclick="setTF(this,'240')">4 س</button><button onclick="setTF(this,'D')">يومي</button></div>
-   <div class="chartbox">
-    <div class="tradingview-widget-container" style="height:100%;width:100%">
-     <div class="tradingview-widget-container__widget"></div>
-     <script id="tvchart" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-     {"allow_symbol_change":true,"calendar":false,"details":false,"hide_side_toolbar":false,"hide_top_toolbar":false,"hide_legend":false,"hide_volume":false,"interval":"5","locale":"ar","save_image":false,"style":"1","symbol":"OANDA:XAUUSD","theme":"dark","timezone":"Asia/Dubai","backgroundColor":"#10283a","gridColor":"rgba(255,255,255,0.05)","withdateranges":true,"studies":[],"autosize":true}
-     </script>
+      <div class="logo">SMART TRADING</div>
     </div>
-   </div>
-  </div>
-  <div class="card">
-   <h3>مستويات السوق</h3><p class="muted" style="margin-bottom:12px">منطقة التحليل الحالية</p>
-   <div class="levels">
-    <div class="level"><span>السعر الحالي</span><strong>LIVE</strong></div>
-    <div class="level"><span>منطقة الدخول</span><strong id="entry">—</strong></div>
-    <div class="level"><span>المقاومة</span><strong id="res">—</strong></div>
-    <div class="level"><span>الدعم</span><strong id="sup">—</strong></div>
-    <div class="level"><span>وقف الخسارة</span><strong style="color:var(--red)" id="sl">—</strong></div>
-   </div>
-   <button class="btn primary" style="width:100%;margin-top:12px" onclick="openTool('levels')">حساب المستويات</button>
-  </div>
- </div>
-</section>
+  </header>
 
-<section class="section" id="tools">
- <div class="section-head"><div><h2>أدوات التداول</h2><p>اضغط على أي أداة لاستخدامها داخل الصفحة</p></div></div>
- <div class="tools">
-  <div class="card tool" onclick="openTool('risk')"><div class="ico">◈</div><b>إدارة المخاطر</b><p>احسب قيمة المخاطرة وحجم الصفقة المناسب.</p></div>
-  <div class="card tool" onclick="openTool('lot')"><div class="ico">◉</div><b>حاسبة حجم الصفقة</b><p>الحجم بناءً على الرصيد ووقف الخسارة وقيمة النقطة.</p></div>
-  <div class="card tool" onclick="openTool('levels')"><div class="ico">⌁</div><b>الدعم والمقاومة</b><p>استخرج مستويات أساسية من القمة والقاع.</p></div>
-  <div class="card tool" onclick="openTool('fib')"><div class="ico">φ</div><b>حاسبة فيبوناتشي</b><p>احسب 0.618 و0.705 و0.790 والأهداف.</p></div>
-  <div class="card tool" onclick="openTool('gann')"><div class="ico">△</div><b>Gann 360</b><p>حساب تقسيمات الدورة والزوايا السعرية.</p></div>
-  <div class="card tool" onclick="openTool('can')"><div class="ico">▦</div><b>CAN3 / CAN4</b><p>إدخال نطاقات الشموع واستخراج المستويات.</p></div>
-  <div class="card tool" onclick="openTool('radar')"><div class="ico">◎</div><b>سكالب رادار</b><p>واجهة تجهيز الإشارة: اتجاه، دخول، SL وTP.</p></div>
-  <div class="card tool" onclick="openTool('calendar')"><div class="ico">◷</div><b>التقويم الاقتصادي</b><p>الأخبار والأحداث الاقتصادية عبر TradingView.</p></div>
- </div>
-</section>
+  <main class="container">
+    <section class="hero">
+      <small>SMART TRADING PLATFORM</small>
+      <h1>حلّل السوق <span>بذكاء</span><br />واتخذ قرارات أفضل</h1>
+      <p>
+        منصة متكاملة لتحليل الذهب والأسواق المالية، توفر لك أدوات التداول
+        والرسوم البيانية وإدارة المخاطر في مكان واحد.
+      </p>
 
-<section class="section" id="radar">
- <div class="section-head"><div><h2>سكالب رادار</h2><p>لوحة إشارة قابلة للاستخدام من داخل الصفحة</p></div><span class="signal">جاهز للتحليل</span></div>
- <div class="card">
-  <div class="formgrid">
-   <div class="field"><label>الأصل</label><select id="asset"><option>XAUUSD</option><option>BTCUSD</option><option>EURUSD</option><option>NAS100</option></select></div>
-   <div class="field"><label>الاتجاه</label><select id="dir"><option>شراء</option><option>بيع</option></select></div>
-   <div class="field"><label>الدخول</label><input id="rEntry" type="number" value="4158.50"></div>
-   <div class="field"><label>وقف الخسارة</label><input id="rSL" type="number" value="4150"></div>
-  </div>
-  <button class="btn primary" style="margin-top:12px" onclick="makeRadar()">إنشاء خطة الصفقة</button>
-  <div class="result" id="radarResult">أدخل البيانات ثم اضغط إنشاء خطة الصفقة.</div>
- </div>
-</section>
+      <div class="actions">
+        <button class="primary-btn" onclick="document.querySelector('#analysis').scrollIntoView({behavior:'smooth'})">
+          ابدأ التحليل
+        </button>
+        <button class="outline-btn" onclick="document.querySelector('#tools').scrollIntoView({behavior:'smooth'})">
+          اكتشف أدوات التداول
+        </button>
+      </div>
+    </section>
 
-<section class="section" id="calendar">
- <div class="section-head"><div><h2>التقويم الاقتصادي</h2><p>بيانات الأحداث الاقتصادية داخل الصفحة</p></div></div>
- <div class="card" style="min-height:520px">
-  <div class="tradingview-widget-container" style="height:500px">
-   <div class="tradingview-widget-container__widget"></div>
-   <script src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-   {"colorTheme":"dark","isTransparent":true,"width":"100%","height":"100%","locale":"ar","importanceFilter":"0,1","countryFilter":"us,eu,gb,jp,cn"}
-   </script>
-  </div>
- </div>
-</section>
-</main>
+    <section class="market-strip">
+      <div class="market-card">
+        <small>الذهب XAU/USD</small>
+        <strong id="goldPrice">$4,158.50</strong>
+        <span class="up">▲ +0.84%</span>
+      </div>
 
-<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeTool()">×</button><div id="modalContent"></div></div></div>
+      <div class="market-card">
+        <small>EUR/USD</small>
+        <strong>1.1748</strong>
+        <span class="down">▼ -0.12%</span>
+      </div>
 
-<footer>Smart Trading © 2026 — تداول بذكاء، حلّل بثقة</footer>
+      <div class="market-card">
+        <small>Bitcoin</small>
+        <strong>$112,480</strong>
+        <span class="up">▲ +1.21%</span>
+      </div>
 
-<script>
-const modal=document.getElementById('modal'),content=document.getElementById('modalContent');
-document.getElementById('menu').onclick=()=>document.getElementById('nav').classList.toggle('open');
-function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
-function closeTool(){modal.classList.remove('open')}
-function openTool(type){
- let h='';
- if(type==='risk') h=`<h2>حاسبة إدارة المخاطر</h2><p class="muted">أدخل رأس المال ونسبة المخاطرة ووقف الخسارة.</p>
- <div class="formgrid" style="margin-top:16px"><div class="field"><label>رأس المال</label><input id="c" type="number" value="10000"></div><div class="field"><label>المخاطرة %</label><input id="rp" type="number" value="1"></div><div class="field"><label>وقف الخسارة بالنقاط</label><input id="st" type="number" value="300"></div></div>
- <button class="btn primary" style="margin-top:12px" onclick="calcRisk()">احسب</button><div class="result" id="rr">—</div>`;
- if(type==='lot') h=`<h2>حاسبة حجم الصفقة</h2><div class="formgrid" style="margin-top:16px"><div class="field"><label>الرصيد</label><input id="lc" type="number" value="10000"></div><div class="field"><label>المخاطرة %</label><input id="lr" type="number" value="1"></div><div class="field"><label>SL بالنقاط</label><input id="ls" type="number" value="300"></div><div class="field"><label>قيمة النقطة للوت</label><input id="lv" type="number" value="1"></div></div><button class="btn primary" style="margin-top:12px" onclick="calcLot()">احسب الحجم</button><div class="result" id="lrout">—</div>`;
- if(type==='levels') h=`<h2>حاسبة الدعم والمقاومة</h2><div class="formgrid" style="margin-top:16px"><div class="field"><label>القمة High</label><input id="lh" type="number" value="4284.76"></div><div class="field"><label>القاع Low</label><input id="ll" type="number" value="4110.69"></div><div class="field"><label>الإغلاق Close</label><input id="lcx" type="number" value="4115.46"></div></div><button class="btn primary" style="margin-top:12px" onclick="calcLevels()">احسب المستويات</button><div class="result" id="lout">—</div>`;
- if(type==='fib') h=`<h2>حاسبة فيبوناتشي</h2><div class="formgrid" style="margin-top:16px"><div class="field"><label>القمة</label><input id="fh" type="number" value="4284.76"></div><div class="field"><label>القاع</label><input id="fl" type="number" value="4110.69"></div></div><button class="btn primary" style="margin-top:12px" onclick="calcFib()">احسب</button><div class="result" id="fout">—</div>`;
- if(type==='gann') h=`<h2>Gann 360</h2><p class="muted">أدخل سعر المرساة ليتم تقسيم النطاق إلى زوايا 60°.</p><div class="field" style="margin-top:16px"><label>السعر الأساسي</label><input id="ga" type="number" value="4500"></div><button class="btn primary" style="margin-top:12px" onclick="calcGann()">احسب الزوايا</button><div class="result" id="gout">—</div>`;
- if(type==='can') h=`<h2>CAN3 / CAN4</h2><p class="muted">إدخال نطاق CAN3 وCAN4 واستخراج النطاقات.</p><div class="formgrid" style="margin-top:16px"><div class="field"><label>CAN4 High</label><input id="c4h" type="number" value="84040"></div><div class="field"><label>CAN4 Low</label><input id="c4l" type="number" value="83802"></div><div class="field"><label>CAN3 High</label><input id="c3h" type="number" value="84030"></div><div class="field"><label>CAN3 Low</label><input id="c3l" type="number" value="83802"></div></div><button class="btn primary" style="margin-top:12px" onclick="calcCan()">احسب</button><div class="result" id="canout">—</div>`;
- if(type==='radar') {closeTool();go('radar');return}
- if(type==='calendar') {closeTool();go('calendar');return}
- content.innerHTML=h;modal.classList.add('open')
-}
-function calcRisk(){let c=+document.getElementById('c').value,r=+document.getElementById('rp').value,s=+document.getElementById('st').value;let v=c*r/100;document.getElementById('rr').innerHTML=`قيمة المخاطرة: <b>${v.toFixed(2)}</b> — الحجم النظري: <b>${(v/s).toFixed(2)}</b> لوت`}
-function calcLot(){let c=+lc.value,r=+lr.value,s=+ls.value,v=+lv.value;let risk=c*r/100;document.getElementById('lrout').innerHTML=`المخاطرة: <b>${risk.toFixed(2)}</b> — حجم الصفقة: <b>${(risk/(s*v)).toFixed(2)}</b> لوت`}
-function calcLevels(){let h=+lh.value,l=+ll.value,c=+lcx.value,p=(h+l+c)/3,r1=2*p-l,s1=2*p-h,r2=p+(h-l),s2=p-(h-l);document.getElementById('lout').innerHTML=`Pivot: <b>${p.toFixed(2)}</b><br>R1: <b>${r1.toFixed(2)}</b> — R2: <b>${r2.toFixed(2)}</b><br>S1: <b>${s1.toFixed(2)}</b> — S2: <b>${s2.toFixed(2)}</b>`}
-function calcFib(){let h=+fh.value,l=+fl.value,d=h-l;document.getElementById('fout').innerHTML=`0.618: <b>${(h-d*.618).toFixed(2)}</b><br>0.705: <b>${(h-d*.705).toFixed(2)}</b><br>0.790: <b>${(h-d*.790).toFixed(2)}</b><br>1.0: <b>${l.toFixed(2)}</b>`}
-function calcGann(){let a=+ga.value,step=a*.01;document.getElementById('gout').innerHTML=`60°: <b>${(a+step).toFixed(2)}</b> — 120°: <b>${(a+2*step).toFixed(2)}</b> — 180°: <b>${(a+3*step).toFixed(2)}</b> — 240°: <b>${(a+4*step).toFixed(2)}</b> — 300°: <b>${(a+5*step).toFixed(2)}</b>`}
-function calcCan(){let h4=+c4h.value,l4=+c4l.value,h3=+c3h.value,l3=+c3l.value,r4=h4-l4,r3=h3-l3;document.getElementById('canout').innerHTML=`CAN4 Range: <b>${r4.toFixed(2)}</b><br>CAN3 Range: <b>${r3.toFixed(2)}</b><br>CAN4 Mid: <b>${((h4+l4)/2).toFixed(2)}</b><br>CAN3 Mid: <b>${((h3+l3)/2).toFixed(2)}</b>`}
-function makeRadar(){let e=+rEntry.value,s=+rSL.value,d=Math.abs(e-s),dir=document.getElementById('dir').value;let sign=dir==='شراء'?1:-1;let t1=e+sign*d,t2=e+sign*d*2,t3=e+sign*d*3;document.getElementById('radarResult').innerHTML=`<b>${dir} ${asset.value}</b><br>الدخول: <b>${e.toFixed(2)}</b> — SL: <b>${s.toFixed(2)}</b><br>TP1: <b>${t1.toFixed(2)}</b> — TP2: <b>${t2.toFixed(2)}</b> — TP3: <b>${t3.toFixed(2)}</b>`}
-function setTF(btn,tf){document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');/* TradingView widget itself can be changed from its toolbar; buttons are UI shortcuts reserved for future broker/API integration. */}
-</script>
+      <div class="market-card">
+        <small>مؤشر الدولار</small>
+        <strong>98.42</strong>
+        <span class="down">▼ -0.35%</span>
+      </div>
+    </section>
+
+    <div class="section-title" id="analysis">
+      <div>
+        <h2>تحليل الذهب XAU/USD</h2>
+        <p>نظرة فنية على حركة السعر الحالية</p>
+      </div>
+      <span class="signal">الاتجاه: صاعد</span>
+    </div>
+
+    <section class="analysis-layout">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="asset">
+            <div class="asset-icon">Au</div>
+            <div>
+              <b>Gold / US Dollar</b>
+              <div class="muted">السعر الفوري</div>
+            </div>
+          </div>
+          <strong style="color:var(--gold)" id="chartPrice">$4,158.50</strong>
+        </div>
+
+        <div class="timeframes">
+          <button>15 دقيقة</button>
+          <button class="active">ساعة</button>
+          <button>4 ساعات</button>
+          <button>يومي</button>
+        </div>
+
+        <canvas id="chart" width="900" height="360"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>مستويات السوق</h3>
+            <p class="muted">تحليل فني مبدئي</p>
+          </div>
+          <span class="signal">شراء</span>
+        </div>
+
+        <div class="levels">
+          <div class="level">
+            <span>السعر الحالي</span>
+            <strong>4,158.50</strong>
+          </div>
+
+          <div class="level">
+            <span>منطقة الدخول</span>
+            <strong>4,150.00</strong>
+          </div>
+
+          <div class="level">
+            <span>المقاومة الأولى</span>
+            <strong>4,180.00</strong>
+          </div>
+
+          <div class="level">
+            <span>الهدف الثاني</span>
+            <strong>4,215.00</strong>
+          </div>
+
+          <div class="level">
+            <span>وقف الخسارة</span>
+            <strong style="color:var(--red)">4,125.00</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-title" id="tools">
+      <div>
+        <h2>أدوات التداول</h2>
+        <p>أدوات تساعدك على تحليل الصفقة وإدارة المخاطر</p>
+      </div>
+    </div>
+
+    <section class="tools">
+      <div class="tool-card">
+        <b>حاسبة حجم الصفقة</b>
+        <p>احسب الحجم المناسب للصفقة بناءً على رأس المال والمخاطرة.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>حاسبة المخاطرة</b>
+        <p>حدد نسبة المخاطرة وقيمة الخسارة المحتملة قبل الدخول.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>الدعم والمقاومة</b>
+        <p>تابع أهم المستويات السعرية المؤثرة في حركة السوق.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>الأخبار والتوقعات</b>
+        <p>تابع الأخبار الاقتصادية التي قد تؤثر على الأسواق.</p>
+      </div>
+    </section>
+
+    <div class="section-title" id="calculator">
+      <div>
+        <h2>حاسبة إدارة المخاطر</h2>
+        <p>أدخل البيانات للحصول على حجم الصفقة المقترح</p>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="calculator">
+        <div class="field">
+          <label>رأس المال</label>
+          <input id="capital" type="number" value="10000" />
+        </div>
+
+        <div class="field">
+          <label>نسبة المخاطرة %</label>
+          <input id="risk" type="number" value="1" />
+        </div>
+
+        <div class="field">
+          <label>وقف الخسارة بالنقاط</label>
+          <input id="stop" type="number" value="300" />
+        </div>
+
+        <div style="display:flex;align-items:end">
+          <button class="primary-btn" style="width:100%" onclick="calculateRisk()">
+            احسب الآن
+          </button>
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        قيمة المخاطرة: 100 دولار — حجم الصفقة المقترح: 0.33 لوت
+      </div>
+    </section>
+
+    <div class="section-title" id="news">
+      <div>
+        <h2>آخر التحليلات</h2>
+        <p>محتوى مختصر لمتابعة حركة الأسواق</p>
+      </div>
+    </div>
+
+    <section class="tools">
+      <div class="tool-card">
+        <b>تحليل الذهب اليوم</b>
+        <p>مراقبة مناطق الدعم والمقاومة والسيناريوهات المحتملة.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>كيف تقرأ الشارت؟</b>
+        <p>شرح مبسط للشموع اليابانية والاتجاهات السعرية.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>إدارة رأس المال</b>
+        <p>قواعد عملية للحفاظ على رأس المال وتقليل الخسائر.</p>
+      </div>
+
+      <div class="tool-card">
+        <b>اشترك في PRO</b>
+        <p>احصل على تحليلات متقدمة وتنبيهات مباشرة.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Smart Trading © 2026 — تداول بذكاء، حلّل بثقة
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const nav = document.getElementById("nav");
+
+    menuBtn.addEventListener("click", () => {
+      nav.classList.toggle("open");
+    });
+
+    function calculateRisk() {
+      const capital = Number(document.getElementById("capital").value);
+      const risk = Number(document.getElementById("risk").value);
+      const stop = Number(document.getElementById("stop").value);
+
+      if (!capital || !risk || !stop) return;
+
+      const riskValue = capital * (risk / 100);
+      const lot = riskValue / stop;
+
+      document.getElementById("result").innerHTML =
+        `قيمة المخاطرة: <b>${riskValue.toFixed(2)} دولار</b>
+        — حجم الصفقة المقترح: <b>${lot.toFixed(2)} لوت</b>`;
+    }
+
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+
+    function drawChart() {
+      const width = canvas.width;
+      const height = canvas.height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const points = [];
+      let value = 240;
+
+      for (let i = 0; i < 80; i++) {
+        value += (Math.random() - 0.53) * 20;
+        value = Math.max(80, Math.min(310, value));
+        points.push(value);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(0, points[0]);
+
+      points.forEach((point, index) => {
+        const x = index * (width / (points.length - 1));
+        ctx.lineTo(x, point);
+      });
+
+      ctx.strokeStyle = "#e8bd58";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, "rgba(232,189,88,.22)");
+      gradient.addColorStop(1, "rgba(232,189,88,0)");
+
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    drawChart();
+    setInterval(drawChart, 4000);
+  </script>
 </body>
 </html>
