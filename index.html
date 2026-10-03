@@ -312,6 +312,7 @@
     .tool-card {
       padding: 20px;
       transition: .2s;
+      position: relative;
     }
 
     .tool-card:hover {
@@ -371,6 +372,63 @@
       color: var(--muted);
       text-align: center;
       font-size: 13px;
+    }
+
+    /* =========================
+       AUTH / LOCK SYSTEM
+       ========================= */
+
+    .auth-banner {
+      display: none;
+      margin: 18px 0;
+      padding: 15px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(232, 189, 88, .08);
+      color: var(--text);
+      line-height: 1.9;
+      text-align: center;
+    }
+
+    .auth-banner.show {
+      display: block;
+    }
+
+    .protected-area {
+      position: relative;
+    }
+
+    .protected-tool {
+      cursor: pointer;
+    }
+
+    .locked {
+      position: relative;
+    }
+
+    .locked::after {
+      content: "🔒";
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      background: rgba(7,21,33,.92);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      z-index: 3;
+      font-size: 14px;
+    }
+
+    .auth-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-right: 8px;
     }
 
     @media (max-width: 850px) {
@@ -433,302 +491,922 @@
 </head>
 
 <body>
-  <header>
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:16px">
-      <button class="menu" id="menuBtn">☰</button>
 
-      <nav id="nav">
-        <a href="#analysis">التحليل والرسم البياني</a>
-        <a href="#tools">أدوات التداول</a>
-        <a href="#calculator">حاسبة المخاطرة</a>
-        <a href="#news">الأخبار</a>
-        <button class="outline-btn">تسجيل الدخول</button>
-      </nav>
+<header>
+  <div class="container"
+       style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:16px">
 
-      <div class="logo">SMART TRADING</div>
+    <button class="menu" id="menuBtn">☰</button>
+
+    <nav id="nav">
+      <a href="#analysis">التحليل والرسم البياني</a>
+      <a href="#tools">أدوات التداول</a>
+      <a href="#calculator">حاسبة المخاطرة</a>
+      <a href="#news">الأخبار</a>
+
+      <a
+        class="outline-btn"
+        id="authBtn"
+        href="login.html">
+        تسجيل الدخول
+      </a>
+    </nav>
+
+    <div class="logo">SMART TRADING</div>
+
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- حالة العضو -->
+  <div id="authBanner" class="auth-banner"></div>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <small>SMART TRADING PLATFORM</small>
+
+    <h1>
+      حلّل السوق <span>بذكاء</span><br />
+      واتخذ قرارات أفضل
+    </h1>
+
+    <p>
+      منصة متكاملة لتحليل الذهب والأسواق المالية،
+      توفر لك أدوات التداول والرسوم البيانية
+      وإدارة المخاطر في مكان واحد.
+    </p>
+
+    <div class="actions">
+
+      <button
+        class="primary-btn"
+        onclick="document.querySelector('#analysis').scrollIntoView({behavior:'smooth'})">
+        ابدأ التحليل
+      </button>
+
+      <button
+        class="outline-btn"
+        onclick="document.querySelector('#tools').scrollIntoView({behavior:'smooth'})">
+        اكتشف أدوات التداول
+      </button>
+
     </div>
-  </header>
 
-  <main class="container">
-    <section class="hero">
-      <small>SMART TRADING PLATFORM</small>
-      <h1>حلّل السوق <span>بذكاء</span><br />واتخذ قرارات أفضل</h1>
+  </section>
+
+
+  <!-- MARKET -->
+
+  <section class="market-strip">
+
+    <div class="market-card">
+
+      <small>الذهب XAU/USD</small>
+
+      <strong id="goldPrice">
+        $4,158.50
+      </strong>
+
+      <span class="up">
+        ▲ +0.84%
+      </span>
+
+    </div>
+
+
+    <div class="market-card">
+
+      <small>EUR/USD</small>
+
+      <strong>
+        1.1748
+      </strong>
+
+      <span class="down">
+        ▼ -0.12%
+      </span>
+
+    </div>
+
+
+    <div class="market-card">
+
+      <small>Bitcoin</small>
+
+      <strong>
+        $112,480
+      </strong>
+
+      <span class="up">
+        ▲ +1.21%
+      </span>
+
+    </div>
+
+
+    <div class="market-card">
+
+      <small>مؤشر الدولار</small>
+
+      <strong>
+        98.42
+      </strong>
+
+      <span class="down">
+        ▼ -0.35%
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <!-- ANALYSIS -->
+
+  <div class="section-title" id="analysis">
+
+    <div>
+
+      <h2>
+        تحليل الذهب XAU/USD
+      </h2>
+
       <p>
-        منصة متكاملة لتحليل الذهب والأسواق المالية، توفر لك أدوات التداول
-        والرسوم البيانية وإدارة المخاطر في مكان واحد.
+        نظرة فنية على حركة السعر الحالية
       </p>
 
-      <div class="actions">
-        <button class="primary-btn" onclick="document.querySelector('#analysis').scrollIntoView({behavior:'smooth'})">
-          ابدأ التحليل
-        </button>
-        <button class="outline-btn" onclick="document.querySelector('#tools').scrollIntoView({behavior:'smooth'})">
-          اكتشف أدوات التداول
-        </button>
-      </div>
-    </section>
-
-    <section class="market-strip">
-      <div class="market-card">
-        <small>الذهب XAU/USD</small>
-        <strong id="goldPrice">$4,158.50</strong>
-        <span class="up">▲ +0.84%</span>
-      </div>
-
-      <div class="market-card">
-        <small>EUR/USD</small>
-        <strong>1.1748</strong>
-        <span class="down">▼ -0.12%</span>
-      </div>
-
-      <div class="market-card">
-        <small>Bitcoin</small>
-        <strong>$112,480</strong>
-        <span class="up">▲ +1.21%</span>
-      </div>
-
-      <div class="market-card">
-        <small>مؤشر الدولار</small>
-        <strong>98.42</strong>
-        <span class="down">▼ -0.35%</span>
-      </div>
-    </section>
-
-    <div class="section-title" id="analysis">
-      <div>
-        <h2>تحليل الذهب XAU/USD</h2>
-        <p>نظرة فنية على حركة السعر الحالية</p>
-      </div>
-      <span class="signal">الاتجاه: صاعد</span>
     </div>
 
-    <section class="analysis-layout">
-      <div class="panel">
-        <div class="panel-head">
-          <div class="asset">
-            <div class="asset-icon">Au</div>
-            <div>
-              <b>Gold / US Dollar</b>
-              <div class="muted">السعر الفوري</div>
-            </div>
+    <span class="signal">
+      الاتجاه: صاعد
+    </span>
+
+  </div>
+
+
+  <section class="analysis-layout">
+
+
+    <!-- CHART -->
+
+    <div class="panel">
+
+      <div class="panel-head">
+
+        <div class="asset">
+
+          <div class="asset-icon">
+            Au
           </div>
-          <strong style="color:var(--gold)" id="chartPrice">$4,158.50</strong>
-        </div>
 
-        <div class="timeframes">
-          <button>15 دقيقة</button>
-          <button class="active">ساعة</button>
-          <button>4 ساعات</button>
-          <button>يومي</button>
-        </div>
-
-        <canvas id="chart" width="900" height="360"></canvas>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head">
           <div>
-            <h3>مستويات السوق</h3>
-            <p class="muted">تحليل فني مبدئي</p>
+
+            <b>
+              Gold / US Dollar
+            </b>
+
+            <div class="muted">
+              السعر الفوري
+            </div>
+
           </div>
-          <span class="signal">شراء</span>
+
         </div>
 
-        <div class="levels">
-          <div class="level">
-            <span>السعر الحالي</span>
-            <strong>4,158.50</strong>
-          </div>
+        <strong
+          style="color:var(--gold)"
+          id="chartPrice">
 
-          <div class="level">
-            <span>منطقة الدخول</span>
-            <strong>4,150.00</strong>
-          </div>
+          $4,158.50
 
-          <div class="level">
-            <span>المقاومة الأولى</span>
-            <strong>4,180.00</strong>
-          </div>
+        </strong>
 
-          <div class="level">
-            <span>الهدف الثاني</span>
-            <strong>4,215.00</strong>
-          </div>
-
-          <div class="level">
-            <span>وقف الخسارة</span>
-            <strong style="color:var(--red)">4,125.00</strong>
-          </div>
-        </div>
       </div>
-    </section>
 
-    <div class="section-title" id="tools">
-      <div>
-        <h2>أدوات التداول</h2>
-        <p>أدوات تساعدك على تحليل الصفقة وإدارة المخاطر</p>
+
+      <div class="timeframes">
+
+        <button>
+          15 دقيقة
+        </button>
+
+        <button class="active">
+          ساعة
+        </button>
+
+        <button>
+          4 ساعات
+        </button>
+
+        <button>
+          يومي
+        </button>
+
       </div>
+
+
+      <canvas
+        id="chart"
+        width="900"
+        height="360">
+      </canvas>
+
     </div>
 
-    <section class="tools">
-      <div class="tool-card">
-        <b>حاسبة حجم الصفقة</b>
-        <p>احسب الحجم المناسب للصفقة بناءً على رأس المال والمخاطرة.</p>
+
+    <!-- LEVELS -->
+
+    <div class="panel">
+
+      <div class="panel-head">
+
+        <div>
+
+          <h3>
+            مستويات السوق
+          </h3>
+
+          <p class="muted">
+            تحليل فني مبدئي
+          </p>
+
+        </div>
+
+        <span class="signal">
+          شراء
+        </span>
+
       </div>
 
-      <div class="tool-card">
-        <b>حاسبة المخاطرة</b>
-        <p>حدد نسبة المخاطرة وقيمة الخسارة المحتملة قبل الدخول.</p>
+
+      <div class="levels">
+
+        <div class="level">
+
+          <span>
+            السعر الحالي
+          </span>
+
+          <strong>
+            4,158.50
+          </strong>
+
+        </div>
+
+
+        <div class="level">
+
+          <span>
+            منطقة الدخول
+          </span>
+
+          <strong>
+            4,150.00
+          </strong>
+
+        </div>
+
+
+        <div class="level">
+
+          <span>
+            المقاومة الأولى
+          </span>
+
+          <strong>
+            4,180.00
+          </strong>
+
+        </div>
+
+
+        <div class="level">
+
+          <span>
+            الهدف الثاني
+          </span>
+
+          <strong>
+            4,215.00
+          </strong>
+
+        </div>
+
+
+        <div class="level">
+
+          <span>
+            وقف الخسارة
+          </span>
+
+          <strong style="color:var(--red)">
+            4,125.00
+          </strong>
+
+        </div>
+
       </div>
 
-      <div class="tool-card">
-        <b>الدعم والمقاومة</b>
-        <p>تابع أهم المستويات السعرية المؤثرة في حركة السوق.</p>
-      </div>
-
-      <div class="tool-card">
-        <b>الأخبار والتوقعات</b>
-        <p>تابع الأخبار الاقتصادية التي قد تؤثر على الأسواق.</p>
-      </div>
-    </section>
-
-    <div class="section-title" id="calculator">
-      <div>
-        <h2>حاسبة إدارة المخاطر</h2>
-        <p>أدخل البيانات للحصول على حجم الصفقة المقترح</p>
-      </div>
     </div>
 
-    <section class="panel">
-      <div class="calculator">
-        <div class="field">
-          <label>رأس المال</label>
-          <input id="capital" type="number" value="10000" />
-        </div>
+  </section>
 
-        <div class="field">
-          <label>نسبة المخاطرة %</label>
-          <input id="risk" type="number" value="1" />
-        </div>
 
-        <div class="field">
-          <label>وقف الخسارة بالنقاط</label>
-          <input id="stop" type="number" value="300" />
-        </div>
+  <!-- TOOLS -->
 
-        <div style="display:flex;align-items:end">
-          <button class="primary-btn" style="width:100%" onclick="calculateRisk()">
-            احسب الآن
-          </button>
-        </div>
-      </div>
+  <div class="section-title" id="tools">
 
-      <div class="result" id="result">
-        قيمة المخاطرة: 100 دولار — حجم الصفقة المقترح: 0.33 لوت
-      </div>
-    </section>
+    <div>
 
-    <div class="section-title" id="news">
-      <div>
-        <h2>آخر التحليلات</h2>
-        <p>محتوى مختصر لمتابعة حركة الأسواق</p>
-      </div>
+      <h2>
+        أدوات التداول
+      </h2>
+
+      <p>
+        أدوات تساعدك على تحليل الصفقة وإدارة المخاطر
+      </p>
+
     </div>
 
-    <section class="tools">
-      <div class="tool-card">
-        <b>تحليل الذهب اليوم</b>
-        <p>مراقبة مناطق الدعم والمقاومة والسيناريوهات المحتملة.</p>
+  </div>
+
+
+  <section class="tools protected-area">
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="حاسبة حجم الصفقة">
+
+      <b>
+        حاسبة حجم الصفقة
+      </b>
+
+      <p>
+        احسب الحجم المناسب للصفقة
+        بناءً على رأس المال والمخاطرة.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="حاسبة المخاطرة">
+
+      <b>
+        حاسبة المخاطرة
+      </b>
+
+      <p>
+        حدد نسبة المخاطرة وقيمة الخسارة
+        المحتملة قبل الدخول.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="الدعم والمقاومة">
+
+      <b>
+        الدعم والمقاومة
+      </b>
+
+      <p>
+        تابع أهم المستويات السعرية
+        المؤثرة في حركة السوق.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="الأخبار والتوقعات">
+
+      <b>
+        الأخبار والتوقعات
+      </b>
+
+      <p>
+        تابع الأخبار الاقتصادية التي
+        قد تؤثر على الأسواق.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- RISK CALCULATOR -->
+
+  <div class="section-title" id="calculator">
+
+    <div>
+
+      <h2>
+        حاسبة إدارة المخاطر
+      </h2>
+
+      <p>
+        أدخل البيانات للحصول على حجم الصفقة المقترح
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <section class="panel protected-area">
+
+    <div class="calculator">
+
+
+      <div class="field">
+
+        <label>
+          رأس المال
+        </label>
+
+        <input
+          id="capital"
+          type="number"
+          value="10000" />
+
       </div>
 
-      <div class="tool-card">
-        <b>كيف تقرأ الشارت؟</b>
-        <p>شرح مبسط للشموع اليابانية والاتجاهات السعرية.</p>
+
+      <div class="field">
+
+        <label>
+          نسبة المخاطرة %
+        </label>
+
+        <input
+          id="risk"
+          type="number"
+          value="1" />
+
       </div>
 
-      <div class="tool-card">
-        <b>إدارة رأس المال</b>
-        <p>قواعد عملية للحفاظ على رأس المال وتقليل الخسائر.</p>
+
+      <div class="field">
+
+        <label>
+          وقف الخسارة بالنقاط
+        </label>
+
+        <input
+          id="stop"
+          type="number"
+          value="300" />
+
       </div>
 
-      <div class="tool-card">
-        <b>اشترك في PRO</b>
-        <p>احصل على تحليلات متقدمة وتنبيهات مباشرة.</p>
+
+      <div style="display:flex;align-items:end">
+
+        <button
+          class="primary-btn"
+          style="width:100%"
+          id="calculateRiskBtn">
+
+          احسب الآن
+
+        </button>
+
       </div>
-    </section>
-  </main>
 
-  <footer>
-    Smart Trading © 2026 — تداول بذكاء، حلّل بثقة
-  </footer>
+    </div>
 
-  <script>
-    const menuBtn = document.getElementById("menuBtn");
-    const nav = document.getElementById("nav");
+
+    <div
+      class="result"
+      id="result">
+
+      قيمة المخاطرة:
+      100 دولار
+      —
+      حجم الصفقة المقترح:
+      0.33 لوت
+
+    </div>
+
+  </section>
+
+
+  <!-- NEWS -->
+
+  <div class="section-title" id="news">
+
+    <div>
+
+      <h2>
+        آخر التحليلات
+      </h2>
+
+      <p>
+        محتوى مختصر لمتابعة حركة الأسواق
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <section class="tools protected-area">
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="تحليل الذهب اليوم">
+
+      <b>
+        تحليل الذهب اليوم
+      </b>
+
+      <p>
+        مراقبة مناطق الدعم والمقاومة
+        والسيناريوهات المحتملة.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="كيف تقرأ الشارت">
+
+      <b>
+        كيف تقرأ الشارت؟
+      </b>
+
+      <p>
+        شرح مبسط للشموع اليابانية
+        والاتجاهات السعرية.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="إدارة رأس المال">
+
+      <b>
+        إدارة رأس المال
+      </b>
+
+      <p>
+        قواعد عملية للحفاظ على رأس المال
+        وتقليل الخسائر.
+      </p>
+
+    </div>
+
+
+    <div
+      class="tool-card protected-tool"
+      data-tool="PRO">
+
+      <b>
+        اشترك في PRO
+      </b>
+
+      <p>
+        احصل على تحليلات متقدمة
+        وتنبيهات مباشرة.
+      </p>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  Smart Trading © 2026 —
+  تداول بذكاء، حلّل بثقة
+
+</footer>
+
+
+<!--
+====================================================
+SUPABASE
+====================================================
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!--
+====================================================
+AUTH
+====================================================
+-->
+
+<script src="auth.js"></script>
+
+
+<!--
+====================================================
+APP
+====================================================
+-->
+
+<script src="app.js"></script>
+
+
+<script>
+
+  /*
+  ================================================
+  القائمة في الهاتف
+  ================================================
+  */
+
+  const menuBtn =
+    document.getElementById("menuBtn");
+
+  const nav =
+    document.getElementById("nav");
+
+
+  if (menuBtn && nav) {
 
     menuBtn.addEventListener("click", () => {
+
       nav.classList.toggle("open");
+
     });
 
-    function calculateRisk() {
-      const capital = Number(document.getElementById("capital").value);
-      const risk = Number(document.getElementById("risk").value);
-      const stop = Number(document.getElementById("stop").value);
+  }
 
-      if (!capital || !risk || !stop) return;
 
-      const riskValue = capital * (risk / 100);
-      const lot = riskValue / stop;
+  /*
+  ================================================
+  إغلاق القائمة عند الضغط على رابط
+  ================================================
+  */
 
-      document.getElementById("result").innerHTML =
-        `قيمة المخاطرة: <b>${riskValue.toFixed(2)} دولار</b>
-        — حجم الصفقة المقترح: <b>${lot.toFixed(2)} لوت</b>`;
+  document.querySelectorAll("nav a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+      nav.classList.remove("open");
+
+    });
+
+  });
+
+
+  /*
+  ================================================
+  منع تشغيل الأدوات إذا لم يكن العضو Approved
+  ================================================
+  */
+
+  document.addEventListener("click", async function(event) {
+
+    const tool =
+      event.target.closest(".protected-tool");
+
+
+    if (!tool) return;
+
+
+    if (typeof requireApproved !== "function") {
+
+      alert(
+        "يجب تسجيل الدخول ثم انتظار موافقة الأدمن."
+      );
+
+      return;
+
     }
 
-    const canvas = document.getElementById("chart");
-    const ctx = canvas.getContext("2d");
 
-    function drawChart() {
-      const width = canvas.width;
-      const height = canvas.height;
+    const allowed =
+      await requireApproved();
 
-      ctx.clearRect(0, 0, width, height);
 
-      const points = [];
-      let value = 240;
+    if (!allowed) {
 
-      for (let i = 0; i < 80; i++) {
-        value += (Math.random() - 0.53) * 20;
-        value = Math.max(80, Math.min(310, value));
-        points.push(value);
+      event.preventDefault();
+      event.stopPropagation();
+
+    }
+
+  });
+
+
+  /*
+  ================================================
+  تحديث حالة الحساب
+  ================================================
+  */
+
+  async function refreshAccountStatus() {
+
+    if (typeof getCurrentUserState !== "function")
+      return;
+
+
+    const profile =
+      await getCurrentUserState();
+
+
+    const banner =
+      document.getElementById("authBanner");
+
+
+    const authBtn =
+      document.getElementById("authBtn");
+
+
+    if (!profile) {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "الأدوات متاحة بعد إنشاء حساب وتسجيل الدخول ثم انتظار موافقة الأدمن.";
+
+        banner.classList.add("show");
+
       }
 
-      ctx.beginPath();
-      ctx.moveTo(0, points[0]);
+      if (authBtn) {
 
-      points.forEach((point, index) => {
-        const x = index * (width / (points.length - 1));
-        ctx.lineTo(x, point);
-      });
+        authBtn.textContent =
+          "تسجيل الدخول";
 
-      ctx.strokeStyle = "#e8bd58";
-      ctx.lineWidth = 3;
-      ctx.stroke();
+        authBtn.href =
+          "login.html";
 
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
-      ctx.closePath();
+      }
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, "rgba(232,189,88,.22)");
-      gradient.addColorStop(1, "rgba(232,189,88,0)");
+      return;
 
-      ctx.fillStyle = gradient;
-      ctx.fill();
     }
 
-    drawChart();
-    setInterval(drawChart, 4000);
-  </script>
+
+    /*
+    ==============================
+    ADMIN
+    ==============================
+    */
+
+    if (profile.role === "admin") {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "مرحبًا بك في لوحة Smart Trading — حساب الأدمن.";
+
+        banner.classList.add("show");
+
+      }
+
+      if (authBtn) {
+
+        authBtn.textContent =
+          "لوحة الإدارة";
+
+        authBtn.href =
+          "admin.html";
+
+      }
+
+      return;
+
+    }
+
+
+    /*
+    ==============================
+    APPROVED
+    ==============================
+    */
+
+    if (profile.status === "approved") {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "حسابك <b>معتمد</b> — يمكنك استخدام جميع أدوات Smart Trading.";
+
+        banner.classList.add("show");
+
+      }
+
+      if (authBtn) {
+
+        authBtn.textContent =
+          "تسجيل الخروج";
+
+        authBtn.href =
+          "#";
+
+        authBtn.onclick =
+          async function(e) {
+
+            e.preventDefault();
+
+            if (typeof logout === "function")
+              await logout();
+
+          };
+
+      }
+
+      return;
+
+    }
+
+
+    /*
+    ==============================
+    PENDING
+    ==============================
+    */
+
+    if (profile.status === "pending") {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "حسابك <b>في انتظار الموافقة</b> من الأدمن. الأدوات ظاهرة لكنها مقفلة.";
+
+        banner.classList.add("show");
+
+      }
+
+    }
+
+
+    /*
+    ==============================
+    REJECTED
+    ==============================
+    */
+
+    if (profile.status === "rejected") {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "تم <b>رفض طلب الحساب</b>. تواصل مع إدارة Smart Trading.";
+
+        banner.classList.add("show");
+
+      }
+
+    }
+
+
+    /*
+    ==============================
+    BANNED
+    ==============================
+    */
+
+    if (profile.status === "banned") {
+
+      if (banner) {
+
+        banner.innerHTML =
+          "هذا الحساب <b>محظور</b> ولا يمكنه استخدام أدوات المنصة.";
+
+        banner.classList.add("show");
+
+      }
+
+    }
+
+  }
+
+
+  /*
+  ================================================
+  تشغيل فحص الحساب
+  ================================================
+  */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    refreshAccountStatus
+  );
+
+
+</script>
+
 </body>
 </html>
